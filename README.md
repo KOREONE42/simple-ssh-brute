@@ -34,19 +34,19 @@ pip install paramiko
 1. Clone this repository to your local machine:
 
    ```bash
-   git clone https://github.com/yourusername/ssh-bruteforce.git
+   git clone https://github.com/KOREONE42/simple-ssh-brute.git
    ```
 
 2. Navigate to the project directory:
 
    ```bash
-   cd ssh-bruteforce
+   cd simple-ssh-brute
    ```
 
 3. Run the script:
 
    ```bash
-   python3 ssh_bruteforce.py
+   python3 ssh_brute.py
    ```
 
 4. The script will prompt you for the following inputs:
