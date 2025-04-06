@@ -1,111 +1,85 @@
 
-# SSH Brute Force Tool
+# Brute Force SSH Password Cracker
 
-
-This is a simple **SSH Brute Force** tool that attempts to guess the password for a given username on a target server using a list of potential passwords.
-
----
+This script is a multi-threaded brute force SSH password cracker. It attempts to find the correct password for a specified target system using passwords from a user-provided file. It is intended for use in ethical hacking, penetration testing, or educational purposes.
 
 ## Features
 
-- Multi-threaded brute-forcing using Python's `paramiko` library.
-- Parallelized password attempts for faster execution.
-- Handles connection timeouts and errors gracefully.
-- Provides feedback on each password attempt.
-- Automatically closes SSH connections after each attempt.
+- **Multi-threading**: The script runs multiple threads concurrently to speed up the brute force process.
+- **Max Retries**: Each password is retried a specified number of times (`MAX_RETRIES`) before moving on.
+- **Timeout Handling**: Handles connection timeouts to prevent threads from hanging indefinitely.
+- **Logging**: Logs attempts, errors, and results to a log file (`brute_force.log`), including timestamps.
+- **Progress Indicator**: Displays progress to the user showing the number of passwords attempted out of the total.
+- **Graceful Exit**: Handles errors and allows the program to exit gracefully if needed.
 
----
-
-## Prerequisites
+## Requirements
 
 - Python 3.x
-- `paramiko` library (install via pip)
-  
-You can install `paramiko` using the following command:
-
-```bash
-pip install paramiko
-```
-
----
+- `paramiko` library for SSH connections. You can install it with:
+  ```bash
+  pip install paramiko
+  ```
 
 ## Usage
 
-1. Clone this repository to your local machine:
+1. **Prepare a password file**:
+   Create a plain text file where each line contains a password to be tested. This file will be used for the brute-force attempt.
 
+2. **Run the script**:
+   Execute the script and provide the following inputs:
+   - Target IP address (the system to try to brute-force)
+   - Username (the user account to attempt)
+   - Password file location (the path to the text file containing potential passwords)
+
+   Example:
    ```bash
-   git clone https://github.com/KOREONE42/simple-ssh-brute.git
+   python ssh_brute.py
    ```
 
-2. Navigate to the project directory:
+3. **Monitor the progress**:
+   - The script will display progress and log each attempt.
+   - If the correct password is found, the script will exit.
+   - You can monitor the log file (`brute_force.log`) for detailed output.
 
-   ```bash
-   cd simple-ssh-brute
-   ```
+## Code Overview
 
-3. Run the script:
+### Key Functions
 
-   ```bash
-   python3 ssh_brute.py
-   ```
+1. **`ssh_connect`**:
+   Tries to connect to the target system using the provided password. It handles various exceptions like authentication errors and connection issues.
 
-4. The script will prompt you for the following inputs:
-   - **Target IP address**: The IP address of the server you want to attempt to brute-force.
-   - **Username**: The username for which you're attempting to guess the password.
-   - **Password file**: The path to a file containing a list of potential passwords (one password per line).
+2. **`try_password`**:
+   Attempts to authenticate with the SSH server using a single password and handles retries if needed.
 
----
+3. **`read_passwords`**:
+   Reads the passwords from the specified file and returns them as a list.
 
-## Example Run:
+4. **`run_brute_force`**:
+   Executes the brute-force attack using multi-threading, attempting multiple passwords concurrently.
+
+5. **Logging**:
+   Logs important events such as password attempts, errors, and results to the `brute_force.log` file.
+
+6. **Thread Management**:
+   Manages the concurrent threads to avoid overwhelming the system, ensuring that no more than `MAX_THREADS` threads run at the same time.
+
+## Example Log Output
 
 ```
-Please enter target IP address: 192.168.1.10
-Please enter username to brute force: admin
-Please enter location of the password file: /path/to/passwords.txt
+2025-04-06 15:10:01 - Attempting password 1/100...
+2025-04-06 15:10:05 - Incorrect password: password123
+2025-04-06 15:10:10 - Attempting password 2/100...
+2025-04-06 15:10:15 - Retry password (attempt 1): password456
+2025-04-06 15:10:20 - Incorrect password: password456
+2025-04-06 15:10:25 - Password found: correctpassword
 ```
 
----
+## Notes
 
-## Customizing the Script
-
-- **Max Threads**: You can adjust the maximum number of threads that will run concurrently by modifying the `MAX_THREADS` variable in the script.
-  
-  ```python
-  MAX_THREADS = 10  # Adjust this value as needed
-  ```
-
----
-
-## Important Notes
-
-- **Ethical Use**: This script should only be used on systems you own or have explicit permission to test. Unauthorized access to systems is illegal and unethical.
-- **Password File**: The script will iterate through all passwords in the specified file. Ensure that the password file is not too large for your system to handle.
-- **Connection Timeout**: The script sets a connection timeout of 5 seconds per attempt. If you want to adjust this timeout, change the value in the `ssh_connect()` function.
-
----
+- This script is intended for ethical and legal use only.
+- Always obtain explicit permission before attempting any form of penetration testing or brute-force attacks on a network.
+- Be aware of the legal implications of running such scripts on any system without proper authorization.
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## Disclaimer
-
-This tool is intended for educational purposes and should only be used on systems you have explicit permission to test. Misuse of this tool may result in legal consequences.
-
----
-
-## Contributing
-
-If you'd like to contribute to the project, feel free to fork the repository and submit a pull request. Any improvements or bug fixes are greatly appreciated!
-
----
-
-## Contact
-
-If you have any questions or suggestions, feel free to open an issue on the GitHub repository.
-
----
-
-Happy Hacking! 😊
